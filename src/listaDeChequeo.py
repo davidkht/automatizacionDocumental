@@ -52,9 +52,9 @@ def adjust_height(cell_range, text,sheet):
     # Ajustar la altura de la fila
     cell_range[0][0].parent.row_dimensions[cell_range[0][0].row].height = adjusted_lines_needed * 15  # Ajustar la altura
 
-def crear_lista_de_chequeo(pdseries,cliente, comercial, contrato, orden_c, ruta_de_guardado,directorio_script):
+def crear_lista_de_chequeo(pdseries,cliente, comercial, contrato, orden_c,ruta, script_dir,directorio_de_trabajo):
 
-    ruta_plantilla=os.path.join(directorio_script,'docs',PLANTILLA)
+    ruta_plantilla=os.path.join(script_dir,'..','docs',PLANTILLA)
     wb_LC = openpyxl.load_workbook(ruta_plantilla)  # Loads the Excel workbook.
     sheet= wb_LC.worksheets[0]
 
@@ -177,7 +177,7 @@ def crear_lista_de_chequeo(pdseries,cliente, comercial, contrato, orden_c, ruta_
 
     consecutivo=str(pdseries.iloc[1])
 
-    carpeta_de_almacenamiento= os.path.join(ruta_de_guardado,pdseries['CIUDAD'],consecutivo+" "+pdseries.iloc[2])
+    carpeta_de_almacenamiento= os.path.join(ruta,pdseries['CIUDAD'],consecutivo+" "+pdseries.iloc[2])
     sheet["J46"]=carpeta_de_almacenamiento
     sheet["J48"]=os.path.join(carpeta_de_almacenamiento,'REGISTRO AUDIOVISUAL')
 
@@ -208,12 +208,12 @@ def crear_lista_de_chequeo(pdseries,cliente, comercial, contrato, orden_c, ruta_
     # adjust_height(celda_variable4o, str(pdseries.iloc[46]),sheet)
 
 
-    img = Image(os.path.join(directorio_script, 'img', 'encabezadoLC.png'))
+    img = Image(os.path.join(script_dir,'..', 'img', 'encabezadoLC.png'))
     sheet.add_image(img, 'C3')
 
     
 
-    carpeta=os.path.join(directorio_script,'LC',consecutivo+" "+pdseries.iloc[2])
+    carpeta=os.path.join(directorio_de_trabajo,'LC',consecutivo+" "+pdseries.iloc[2])
     os.makedirs(carpeta)
     os.makedirs(os.path.join(carpeta,'REGISTRO AUDIOVISUAL'))
 
@@ -224,12 +224,12 @@ def crear_lista_de_chequeo(pdseries,cliente, comercial, contrato, orden_c, ruta_
 
     xsl2pdf(archivo)
 
-def ejecutar_automatizacion_listasC(cliente,orden,contrato,ruta,comercial,directorio_script):
-    ruta_basedatos=os.path.join(directorio_script,'..','basesDeDatos',BASE_DE_DATOS)
+def ejecutar_automatizacion_listasC(cliente,orden,contrato,ruta,comercial,script_dir,directorio_de_trabajo):
+    ruta_basedatos=os.path.join(script_dir,'..','basesDeDatos',BASE_DE_DATOS)
     #lee base de datos
     df = pd.read_excel(ruta_basedatos,keep_default_na=False)
     for indice, fila in df.iterrows():
-        crear_lista_de_chequeo(fila,cliente,comercial,contrato,orden,ruta,directorio_script)
+        crear_lista_de_chequeo(fila,cliente,comercial,contrato,orden,ruta,script_dir,directorio_de_trabajo)
 
 def buscar_pdf_y_registro(ruta_base):
     resultados = []
@@ -250,9 +250,9 @@ def buscar_pdf_y_registro(ruta_base):
     
     return resultados
 
-def unir_informe_con_fotos(directorio_script):
+def unir_informe_con_fotos(ruta_de_trabajo):
 
-    registro_informes=os.path.join(directorio_script,'LC')
+    registro_informes=os.path.join(ruta_de_trabajo,'..','LC')
 
     rutas_subdirectorios=buscar_pdf_y_registro(registro_informes)
     

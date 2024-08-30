@@ -3,6 +3,8 @@ from tkinter import ttk
 import threading
 import pythoncom  # Importa pythoncom para manejar la inicialización de COM
 import informes
+import os
+
 
 class InformesApp(tk.LabelFrame):
     def __init__(self,parent,textoLabel,controlador,directorio_de_script):
@@ -32,7 +34,7 @@ class InformesApp(tk.LabelFrame):
         self.labelruta.grid(row=0,column=0,padx=(40,10),pady=(40,0),sticky='w')
 
         self.variable_de_ruta=tk.StringVar()
-        self.variable_de_ruta.set(r"")
+        self.variable_de_ruta.set(os.path.join(self.script_directory,'..'))
         self.ruta=tk.Entry(self,width=115,textvariable=self.variable_de_ruta,state='readonly')
         self.ruta.grid(row=1,column=0,padx=(40,10), pady=(0,60),sticky='nsew')
 
@@ -73,8 +75,8 @@ class InformesApp(tk.LabelFrame):
                                 command=self.ejecutar_automatizacion,width=20)
         self.boton.grid(row=0, column=0, pady=(25,1),padx=10,sticky='ew',ipady=3)
 
-        self.botondos = ttk.Button(self.botonFrame, text="Unir fotos",
-                                command=informes.unir_informe_con_fotos,width=20)
+        self.botondos = ttk.Button(self.botonFrame, text="Unir fotos",width=20,
+                                command=lambda x=self.script_directory:informes.unir_informe_con_fotos(x))
         self.botondos.grid(row=1, column=0, pady=(1,25),padx=10,sticky='ew',ipady=3)
 
         self.botonCancelar = ttk.Button(self.botonFrame, text="Cancelar",
@@ -124,7 +126,8 @@ class InformesApp(tk.LabelFrame):
         pythoncom.CoInitialize()
         try:
             # Ejecutar la función del módulo main
-            informes.ejecutar_automatizacion_informes(cliente, orden, contrato, direccion, ciudad)
+            informes.ejecutar_automatizacion_informes(cliente, orden, contrato, direccion, ciudad,
+                                                      self.script_directory,self.variable_de_ruta.get())
         finally:
             # Asegurarse de desinicializar COM después de completar la tarea
             pythoncom.CoUninitialize()

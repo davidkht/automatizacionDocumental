@@ -31,7 +31,7 @@ def crear_carpeta_y_archivos(nueva_carpeta,rutaPdf,rutaLinea,script_directory,ru
         origen = os.path.join(script_directory,'..', 'docs',plantilla)
         shutil.copy(origen, destino)
     # Copiar archivos adicionales
-    shutil.copy(os.path.join(script_directory,"SCR", "second.png"), ruta_nueva_carpeta)
+    shutil.copy(os.path.join(script_directory,"..",'img', "encabezadoOferta.png"), ruta_nueva_carpeta)
 
     #Mover pdf a la carpeta
     if rutaPdf:
@@ -190,11 +190,11 @@ def manejar_SP(dataUI, df_SP, cantidades,marcaDestino,script_directory):
     hoja_destino['H18'] = dataUI['Tipo']
     hoja_destino['J18'] = dataUI['Canal']
 
-    img = Image(os.path.join(rutaCarpeta, 'second.png'))
+    img = Image(os.path.join(rutaCarpeta, 'encabezadoOferta.png'))
     hoja_destino.add_image(img, 'B1')
     wb_OF.save(rutaOF)
 
-    os.remove(os.path.join(rutaCarpeta, 'second.png'))
+    os.remove(os.path.join(rutaCarpeta, 'encabezadoOferta.png'))
 
 # Función para crear un archivo CSV de cotización a partir de un archivo SP
 def crear_csv_cot(rutaCarpeta):

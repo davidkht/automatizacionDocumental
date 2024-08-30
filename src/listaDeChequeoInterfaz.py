@@ -3,6 +3,7 @@ from tkinter import ttk
 import threading
 import pythoncom  # Importa pythoncom para manejar la inicialización de COM
 import listaDeChequeo
+import os
     
 
 class listaCApp(tk.LabelFrame):
@@ -33,13 +34,13 @@ class listaCApp(tk.LabelFrame):
         self.labelruta.grid(row=0,column=0,padx=(40,10),pady=(40,0),sticky='w')
 
         self.variable_de_ruta=tk.StringVar()
-        self.variable_de_ruta.set(r"")
+        self.variable_de_ruta.set(os.path.join(self.script_directory,'..'))
         self.ruta=tk.Entry(self,width=115,textvariable=self.variable_de_ruta,state='readonly')
         self.ruta.grid(row=1,column=0,padx=(40,5), pady=(0,60),sticky='nsew')
 
-        self.botonRuta=ttk.Button(self,text="Examinar",width=25)
-        self.botonRuta.grid(row=1,column=1,padx=(5,40), pady=(0,60),sticky='w',
-                            command=self.buscar_ruta_de_trabajo)
+        self.botonRuta=ttk.Button(self,text="Examinar",width=25,
+                                  command=self.buscar_ruta_de_trabajo)
+        self.botonRuta.grid(row=1,column=1,padx=(5,40), pady=(0,60),sticky='w')
 
 
 
@@ -122,7 +123,8 @@ class listaCApp(tk.LabelFrame):
         pythoncom.CoInitialize()
         try:
             # Ejecutar la función del módulo main
-            listaDeChequeo.ejecutar_automatizacion_listasC(cliente, orden, contrato, ruta, comercial,self.script_directory)
+            listaDeChequeo.ejecutar_automatizacion_listasC(cliente, orden, contrato, ruta, comercial,
+                                                           self.script_directory,self.variable_de_ruta.get())
         finally:
             # Asegurarse de desinicializar COM después de completar la tarea
             pythoncom.CoUninitialize()

@@ -53,25 +53,9 @@ def adjust_height(cell_range, text,sheet):
     # Ajustar la altura de la fila
     cell_range[0][0].parent.row_dimensions[cell_range[0][0].row].height = adjusted_lines_needed * 15  # Ajustar la altura
 
-def get_resource_path():
-    """ Retorna la ruta absoluta al recurso, para uso en desarrollo o en el ejecutable empaquetado. """
-    if getattr(sys, 'frozen', False):
-        # Si el programa ha sido empaquetado, el directorio base es el que PyInstaller proporciona
-        base_path = sys._MEIPASS
-    else:
-        # Si estamos en desarrollo, utiliza la ubicación del script
-        base_path = os.path.dirname(os.path.realpath(__file__))
+def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad,script_dir,directorio_de_trabajo):
 
-    return base_path
-
-script_directory = get_resource_path()
-ruta_plantilla=os.path.join(script_directory,'docs',PLANTILLA)
-ruta_basedatos=os.path.join(script_directory,'docs',BASE_DE_DATOS)
-
-
-def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad):
-
-
+    ruta_plantilla=os.path.join(script_dir,'..','docs',PLANTILLA)
     informe= openpyxl.load_workbook(ruta_plantilla)
     sheet= informe.worksheets[0]
 
@@ -169,10 +153,10 @@ def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad):
     adjust_height(celda_recomend, str(serie.iloc[20]),sheet)
 
     #Crea la imagen de encabezado
-    img = Image(os.path.join(script_directory, 'img', 'encabezado.png'))
+    img = Image(os.path.join(script_dir, '..','img', 'encabezadoINFORME.png'))
     sheet.add_image(img, 'B1')
     #Firma de Ingeniero
-    firma = Image(os.path.join(script_directory, 'img', 'Firma.png'))
+    firma = Image(os.path.join(script_dir, '..','img', 'firma.png'))
     sheet.add_image(firma, 'C31')
 
 
@@ -180,7 +164,7 @@ def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad):
     sheet.title=consecutivo
 
     #Crea el arbol de carpetas para el informe
-    carpeta=os.path.join(script_directory,'IT',consecutivo+" "+nombre_equipo)
+    carpeta=os.path.join(directorio_de_trabajo,'IT',consecutivo+" "+nombre_equipo)
     os.makedirs(carpeta)
     os.makedirs(os.path.join(carpeta,'REGISTRO AUDIOVISUAL'))
 
@@ -192,8 +176,8 @@ def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad):
     #Convierte el archivo a pdf
     xsl2pdf(archivo)
 
-def ejecutar_automatizacion_informes(cliente,orden,contrato,direccion,ciudad):
-    
+def ejecutar_automatizacion_informes(cliente,orden,contrato,direccion,ciudad,script_dir,directorio_de_trabajo):
+    ruta_basedatos=os.path.join(script_dir,'..','basesDeDatos',BASE_DE_DATOS)
     #lee base de datos
     df = pd.read_excel(ruta_basedatos,index_col=0,keep_default_na=False)
 
@@ -208,7 +192,7 @@ def ejecutar_automatizacion_informes(cliente,orden,contrato,direccion,ciudad):
     df['FECHA'] = df['FECHA'].dt.strftime('%d-%m-%Y')
 
     for indice, fila in df.iterrows():
-        llenar_informe(fila,cliente,orden,contrato,direccion,ciudad)
+        llenar_informe(fila,cliente,orden,contrato,direccion,ciudad,script_dir,directorio_de_trabajo)
 
 def buscar_pdf_y_registro(ruta_base):
     resultados = []
@@ -229,12 +213,12 @@ def buscar_pdf_y_registro(ruta_base):
     
     return resultados
 
-def unir_informe_con_fotos():
+def unir_informe_con_fotos(ruta_de_trabajo):
 
-    registro_informes=os.path.join(script_directory,'IT')
+    registro_informes=os.path.join(ruta_de_trabajo,'..','IT')
 
     rutas_subdirectorios=buscar_pdf_y_registro(registro_informes)
-    
+    contador=0
     for subdirectorio in rutas_subdirectorios:
 
         informe= os.path.join(subdirectorio[1],subdirectorio[0])
@@ -242,4 +226,6 @@ def unir_informe_con_fotos():
         archivo_de_imagenes  = os.path.join(registro_audiovisual,subdirectorio[0])
         pdf.insert_images_to_pdf(registro_audiovisual,archivo_de_imagenes)
         pdf.merge_pdfs([informe,archivo_de_imagenes] , informe)
+        contador+=1
+    print(contador)
 

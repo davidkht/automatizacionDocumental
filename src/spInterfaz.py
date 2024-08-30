@@ -9,7 +9,7 @@ import pandas as pd
 
 
 class CrearSPWindow(tk.Toplevel):
-    def __init__(self, master, datos, carpetas, carpeta_mitad,comercial,quantities,directorio,ruta_de_trabajo):
+    def __init__(self, master, datos, carpetas, carpeta_mitad,quantities,directorio,ruta_de_trabajo):
         super().__init__(master)
 
         self.title(datos['Carpeta'])
@@ -22,8 +22,9 @@ class CrearSPWindow(tk.Toplevel):
         self.carpeta_mitad = carpeta_mitad
         self.cantidades=quantities
         self.directorio=directorio
-        self.comercial=comercial
+        self.comercial=datos['Comercial']
         self.ruta_trabajo=ruta_de_trabajo
+        self.quantities_final=None
 
         self.referencias = sp.extraer_referencias_de_base_de_datos(self.referencias_seleccionadas(),self.directorio)
         self.frameIzquierdo = ttk.Frame(self)
@@ -86,7 +87,7 @@ class CrearSPWindow(tk.Toplevel):
             # Obtener la cantidad correcta de la lista de tuplas
             cantidad = ''
             occurrences = 0
-            for ref, qty in self.quantities:
+            for ref, qty in self.cantidades:
                 if ref.startswith(referencia_completa):
                     if occurrences == referencia_count[referencia_completa]:
                         cantidad = qty
@@ -143,7 +144,7 @@ class CrearSPWindow(tk.Toplevel):
             if cantidad.strip() and cantidad.replace('.', '', 1).isdigit():# Validate the quantity is not empty and numeric
                 cantidades.append(cantidad)
             else:
-                messagebox.showerror("Error", f"Cantidad inválida para la referencia {self.tree.item(item, 'values')[0]}")
+                messagebox.showerror("Error", f"Cantidad inválida para la referencia {self.tree.item(item, 'values')[0]}", parent=self)
                 return None
         return cantidades
 
@@ -153,18 +154,18 @@ class CrearSPWindow(tk.Toplevel):
                 self.cantidades = True
                 messagebox.showinfo("Información", "No hay elementos. Presione el botón 'ELECTRO'", parent=self)
             else:
-                self.cantidades = self.guardar_cantidades()
-                if self.cantidades is not None:
+                self.quantities_final = self.guardar_cantidades()
+                if self.quantities_final is not None:
                     messagebox.showinfo("Información", "Cantidades guardadas", parent=self)
         except Exception as e:
             messagebox.showerror("Error", "ERROR", parent=self)
 
     def click_final(self):
         try:
-            if self.cantidades and all(cantidad.strip() for cantidad in self.cantidades):
+            if self.quantities_final and all(cantidad.strip() for cantidad in self.quantities_final):
                 try:
-                    self.cantidades = [float(cantidad) for cantidad in self.cantidades if cantidad.strip()]
-                    sp.manejar_SP(self.datos, self.referencias, self.cantidades, self.carpeta_mitad,self.directorio)
+                    self.quantities_final = [float(cantidad) for cantidad in self.quantities_final if cantidad.strip()]
+                    sp.manejar_SP(self.datos, self.referencias, self.quantities_final, self.carpeta_mitad,self.ruta_trabajo)
                     sp.crear_csv_cot(os.path.join(self.ruta_trabajo, self.carpeta_mitad, self.datos['Carpeta']))
                     messagebox.showinfo("Éxito", "Solicitud creada exitósamente\nPresione Aceptar para salir.", parent=self)
                     self.destroy()
@@ -177,7 +178,7 @@ class CrearSPWindow(tk.Toplevel):
         except TypeError:
             messagebox.showwarning("Advertencia", "La solicitud se guardará sin ítems", parent=self)
             try:
-                sp.manejar_SP(self.datos, self.referencias, self.cantidades, self.carpeta_mitad,self.directorio)
+                sp.manejar_SP(self.datos, self.referencias, self.quantities_final, self.carpeta_mitad,self.ruta_trabajo)
                 sp.crear_csv_cot(os.path.join(self.ruta_trabajo, self.carpeta_mitad, self.datos['Carpeta']))
                 messagebox.showinfo("Éxito", "Solicitud creada exitósamente\nPresione Aceptar para salir.", parent=self)
                 self.destroy()
@@ -625,8 +626,7 @@ class SPApp(tk.LabelFrame):
 
     def actualizar_referencias_por_seleccion(self,event):
         seleccion = self.marca.get()  # Obtiene el valor actual seleccionado en la Combobox
-        global lista_completa_referencias  # Declara que se modificará la variable global
-        lista_completa_referencias = list(sp.nombres_de_basedeDatos(seleccion,self.directorio))
+        self.lista_completa_referencias = list(sp.nombres_de_basedeDatos(seleccion,self.directorio))
         self.actualizar_ref_listbox()  # Actualiza la listbox con las referencias correspondientes
 
     def extraer_informacion(self):
@@ -734,6 +734,7 @@ class SPApp(tk.LabelFrame):
 
             # Asignar la lista actualizada de quantities_with_full_ref a quantities
             self.quantities = quantities_with_full_ref
+
  
     def on_switch(self):
         # Esta función se llama cada vez que el estado del switch cambia.
@@ -771,7 +772,7 @@ class SPApp(tk.LabelFrame):
         datos=self.extraer_informacion()        
         ventana_top_level=CrearSPWindow(self, datos, self.carpetas,
                                         self.carpetas[self.carpetaVariable.get()],
-                                        self.variableControl.get(),
-                                        self.quantities,self.directorio,self.variable_de_ruta.get())
+                                        self.quantities,self.directorio,
+                                        self.variable_de_ruta.get())
 
 
