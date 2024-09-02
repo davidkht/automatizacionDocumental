@@ -9,7 +9,7 @@ import pandas as pd
 
 
 class CrearSPWindow(tk.Toplevel):
-    def __init__(self, master, datos, carpetas, carpeta_mitad,quantities,directorio,ruta_de_trabajo):
+    def __init__(self, master, datos, fsc, carpetas, carpeta_mitad,quantities,directorio,ruta_de_trabajo):
         super().__init__(master)
 
         self.title(datos['Carpeta'])
@@ -22,7 +22,7 @@ class CrearSPWindow(tk.Toplevel):
         self.carpeta_mitad = carpeta_mitad
         self.cantidades=quantities
         self.directorio=directorio
-        self.comercial=datos['Comercial']
+        self.fsc=fsc
         self.ruta_trabajo=ruta_de_trabajo
         self.quantities_final=None
 
@@ -58,7 +58,7 @@ class CrearSPWindow(tk.Toplevel):
         self.botonFinal = ttk.Button(self.frameDerecho, image=self.mi_imagen, command=self.click_final)
         self.botonFinal.grid(row=5, column=0, sticky='s', pady=(50, 15))
 
-        self.pdfTrue=sp.crear_carpeta_y_archivos(self.datos['Carpeta'],self.comercial,self.carpeta_mitad,self.directorio,self.ruta_trabajo)
+        self.pdfTrue=sp.crear_carpeta_y_archivos(self.datos['Carpeta'],self.fsc,self.carpeta_mitad,self.directorio,self.ruta_trabajo)
         if self.pdfTrue:
             label = ttk.Label(self.frameDerecho, text="Carpeta creada exitósamente",style="Bold.TLabel")
             label.grid(row=0, column=0,pady=20)
@@ -770,7 +770,7 @@ class SPApp(tk.LabelFrame):
 
     def crear_SP(self):
         datos=self.extraer_informacion()        
-        ventana_top_level=CrearSPWindow(self, datos, self.carpetas,
+        ventana_top_level=CrearSPWindow(self, datos, self.variableControl.get(), self.carpetas,
                                         self.carpetas[self.carpetaVariable.get()],
                                         self.quantities,self.directorio,
                                         self.variable_de_ruta.get())
