@@ -45,6 +45,8 @@ class AutomatizadorApp(tk.Tk):
         }
         self.current_frame = None  # Inicialmente no hay frame visible
 
+        # Manejar el evento de cierre de la ventana
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         self.mainloop()
 
@@ -137,10 +139,14 @@ class AutomatizadorApp(tk.Tk):
             messagebox.showerror("¡Error!","Debe seleccionar un directorio existente")
             return 0
 
-
     def icono_e_imagen(self):
         # Configura el icono de la ventana usando un archivo desde el directorio del script
         self.iconbitmap(os.path.join(DIRECTORIO,'..','img',"imagen.ico"))
         
-
+    def on_closing(self):
+        """ Manejar el evento de cierre de la ventana """
+        if messagebox.askokcancel("Salir", "¿Seguro que quieres salir?"):
+            self.destroy()
+            self.quit()
+            
 AutomatizadorApp("Gestión Documental",(1294,650))
