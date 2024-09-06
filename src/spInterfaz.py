@@ -643,7 +643,7 @@ class SPApp(tk.LabelFrame):
             "Requerimiento": self.radio_values["Requerimiento"].get(),
             "Canal": self.radio_values["Canal"].get(),
             "Presupuesto": self.presupuestoVar.get(),
-            "Consecutivo": self.consecutivo,
+            "Consecutivo": self.nombreCarpetaFinalVariable.get(),
             "Profesionales":  self.num_pro_var.get(),
             "Dias": self.num_dias_var.get(),
             "Moneda":self.monedacomboVar.get()
@@ -690,14 +690,12 @@ class SPApp(tk.LabelFrame):
         search_text = self.searchVar.get()
         self.actualizar_ref_listbox(search_text)
 
-
-
     def cargar_csv(self):
         
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if file_path:
             try:
-                df = pd.read_csv(file_path)
+                df = pd.read_csv(file_path,delimiter=",")
             except Exception as e:
                 messagebox.showerror("Error", f"Error al cargar el CSV: {str(e)}")
                 return
@@ -734,7 +732,6 @@ class SPApp(tk.LabelFrame):
 
             # Asignar la lista actualizada de quantities_with_full_ref a quantities
             self.quantities = quantities_with_full_ref
-
  
     def on_switch(self):
         # Esta función se llama cada vez que el estado del switch cambia.

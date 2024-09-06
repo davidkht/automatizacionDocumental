@@ -113,7 +113,14 @@ def manejar_SP(dataUI, df_SP, cantidades,marcaDestino,script_directory):
     imprevistos=float(dataUI['Imprevistos'])/100
     ciudad = dataUI['Ciudad']
     institucion=dataUI['Institucion']    
-    consecutivo= dataUI['Consecutivo']
+    
+    try:
+        consecutivo= nombre_carpeta.split(" ")[0]+" "+nombre_carpeta.split(" ")[1]
+    except IndexError:
+        consecutivo= ""
+        
+    print(consecutivo)
+
     comercial = dataUI['Comercial']
 
     hoja_SP['E2'] = estampillas
