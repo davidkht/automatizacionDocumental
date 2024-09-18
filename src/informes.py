@@ -30,12 +30,12 @@ def xsl2pdf(file_location):
 # Función para ajustar la altura de las celdas combinadas
 def adjust_height(cell_range, text,sheet):
     # Asumir que cada columna tiene un ancho fijo estándar si no se especifica
-    default_width = 8.43  # Este es el ancho estándar en Excel para columnas no ajustadas
+    default_width = 8  # Este es el ancho estándar en Excel para columnas no ajustadas
     column_widths = [sheet.column_dimensions[openpyxl.utils.get_column_letter(cell.column)].width or default_width for cell in cell_range[0]]
     total_width = sum(column_widths)
 
     # Ajustar para mejor aproximación de caracteres por línea
-    estimated_chars_per_line = total_width * 0.9  # Ajustar el factor según sea necesario
+    estimated_chars_per_line = total_width * 0.7  # Ajustar el factor según sea necesario
 
     # Calcular el número de líneas necesarias
     estimated_lines_needed = math.ceil(len(text) / estimated_chars_per_line)  # Estimar líneas necesarias basado en el ancho combinado
@@ -44,7 +44,7 @@ def adjust_height(cell_range, text,sheet):
     explicit_lines = text.count('\n')
 
     # Total de líneas necesarias
-    total_lines_needed = estimated_lines_needed + explicit_lines
+    total_lines_needed = estimated_lines_needed + explicit_lines*0.5
 
     # Añadir margen adicional para asegurarse de que el texto es visible
     margin_factor = 1.2
@@ -228,4 +228,3 @@ def unir_informe_con_fotos(ruta_de_trabajo):
         pdf.merge_pdfs([informe,archivo_de_imagenes] , informe)
         contador+=1
     print(contador)
-

@@ -9,7 +9,6 @@ import informesInterfaz as it
 import listaDeChequeoInterfaz as lc
 import ofertaInterfaz as of
 
-
 def get_resource_path():
     """ Retorna la ruta absoluta al recurso, para uso en desarrollo o en el ejecutable empaquetado. """
     if getattr(sys, 'frozen', False):
@@ -23,7 +22,6 @@ def get_resource_path():
 
 # Guarda la ruta del script para su uso posterior en la aplicación
 DIRECTORIO=get_resource_path()
-
 
 class AutomatizadorApp(tk.Tk):
     def __init__(self, titulo, geometria):

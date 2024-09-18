@@ -10,10 +10,6 @@ from openpyxl.drawing.image import Image  # Importa Image para añadir imágenes
 
 ARCHIVO_ESPECIFICACIONES_EXCEL = 'Especificaciones_SP2024.xlsx'  # Define el nombre del archivo de especificaciones
 
-# Bloque de código para definir rutas de archivos y directorios, y ejecutar las funciones definidas anteriormente
-
-
-
 def crear_carpeta_y_archivos(nueva_carpeta,rutaPdf,rutaLinea,script_directory,ruta_trabajo):
     
     ruta_nueva_carpeta=os.path.join(ruta_trabajo,rutaLinea,nueva_carpeta)
@@ -118,8 +114,6 @@ def manejar_SP(dataUI, df_SP, cantidades,marcaDestino,script_directory):
         consecutivo= nombre_carpeta.split(" ")[0]+" "+nombre_carpeta.split(" ")[1]
     except IndexError:
         consecutivo= ""
-        
-    print(consecutivo)
 
     comercial = dataUI['Comercial']
 
@@ -256,5 +250,3 @@ def obtener_nuevo_consecutivo(prefijo,marcaDestino,ruta_de_trabajo):
                 consecutivo_actual = int(match.group(1))
                 consecutivo_maximo = max(consecutivo_maximo, consecutivo_actual)    
     return consecutivo_maximo + 1
-
-

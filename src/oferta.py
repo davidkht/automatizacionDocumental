@@ -23,7 +23,6 @@ def get_resource_path():
 
 script_directory = get_resource_path()
 
-
 def limpiar_dataframe(df):
     """
     Limpia el DataFrame proporcionado eliminando filas y columnas completamente vacías y ajustando los encabezados.
@@ -204,4 +203,3 @@ def llenar_oferta(directorio, dfpvp,moneda):
     hoja_destino.add_image(img, 'B1')
 
     wb_OF.save(ruta_of)
-

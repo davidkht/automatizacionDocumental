@@ -33,9 +33,7 @@ class CrearSPWindow(tk.Toplevel):
         self.frameDerecho.grid(row=0, column=1, padx=(10, 20))
 
         self.crear_widgets()
-        self.bind_events()
-
-        
+        self.bind_events()   
  
     def crear_widgets(self):
         self.tree = ttk.Treeview(self.frameIzquierdo)
@@ -153,6 +151,7 @@ class CrearSPWindow(tk.Toplevel):
             if self.master.selected_listbox.size() == 0:
                 self.cantidades = True
                 messagebox.showinfo("Información", "No hay elementos. Presione el botón 'ELECTRO'", parent=self)
+                self.quantities_final=['0']
             else:
                 self.quantities_final = self.guardar_cantidades()
                 if self.quantities_final is not None:
@@ -215,7 +214,6 @@ class SPApp(tk.LabelFrame):
         self.creacion_frame()
         self.ruta_frame()
         
-
     def ruta_frame(self):
         self.frame_de_ruta=tk.LabelFrame(self,text='')
         self.frame_de_ruta.grid(row=0,column=1,padx=(10,0),pady=(10,10),sticky='nsew')
@@ -643,7 +641,6 @@ class SPApp(tk.LabelFrame):
             "Requerimiento": self.radio_values["Requerimiento"].get(),
             "Canal": self.radio_values["Canal"].get(),
             "Presupuesto": self.presupuestoVar.get(),
-            "Consecutivo": self.nombreCarpetaFinalVariable.get(),
             "Profesionales":  self.num_pro_var.get(),
             "Dias": self.num_dias_var.get(),
             "Moneda":self.monedacomboVar.get()
@@ -746,24 +743,29 @@ class SPApp(tk.LabelFrame):
 
     def actualizar_entry1(self,*args):
         # Concatenar los valores de Entry2, Entry3, Combobox1 y variable_uno
-
-        prefijo = self.carpetaVariable.get()
-        nombredelainstitucion=self.institucionVariable.get()
-        comercial=self.variableControl.get().split('/')[-1][:-4]
-        numeroCons=str(sp.obtener_nuevo_consecutivo(prefijo,self.carpetas[prefijo],self.variable_de_ruta.get()))
-        self.numero_consecutivo.set(numeroCons)
-        self.consecutivo=prefijo+" "+self.numero_consecutivo.get()+"-24"
-        if nombredelainstitucion== '':
-            if comercial == '':
-                valor_actualizado=self.consecutivo
+        try:
+            prefijo = self.carpetaVariable.get()
+            nombredelainstitucion=self.institucionVariable.get()
+            comercial=self.variableControl.get().split('/')[-1][:-4]
+        
+            numeroCons=str(sp.obtener_nuevo_consecutivo(prefijo,self.carpetas[prefijo],self.variable_de_ruta.get()))
+            self.numero_consecutivo.set(numeroCons)
+            self.consecutivo=prefijo+" "+self.numero_consecutivo.get()+"-24"
+            if nombredelainstitucion== '':
+                if comercial == '':
+                    valor_actualizado=self.consecutivo
+                else:
+                    valor_actualizado=self.consecutivo+' '+comercial
+            elif comercial== '':
+                valor_actualizado=self.consecutivo+' '+nombredelainstitucion
             else:
-                valor_actualizado=self.consecutivo+' '+comercial
-        elif comercial== '':
-            valor_actualizado=self.consecutivo+' '+nombredelainstitucion
-        else:
-            valor_actualizado = self.consecutivo+' '+comercial+' '+nombredelainstitucion
-        # Actualizar el valor de Entry1
-        self.nombreCarpetaFinalVariable.set(valor_actualizado)
+                valor_actualizado = self.consecutivo+' '+comercial+' '+nombredelainstitucion
+            # Actualizar el valor de Entry1
+            self.nombreCarpetaFinalVariable.set(valor_actualizado)
+        except KeyError:
+            pass
+        except FileNotFoundError:
+            messagebox.showerror("Error",f"No se encuentra la carpeta {self.variable_de_ruta.get()}")
 
     def crear_SP(self):
         datos=self.extraer_informacion()        
@@ -771,5 +773,3 @@ class SPApp(tk.LabelFrame):
                                         self.carpetas[self.carpetaVariable.get()],
                                         self.quantities,self.directorio,
                                         self.variable_de_ruta.get())
-
-

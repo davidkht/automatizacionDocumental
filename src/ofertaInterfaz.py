@@ -8,7 +8,6 @@ import os
 import sys
 import shutil
 
-
 def get_resource_path():
     """ Retorna la ruta absoluta al recurso, para uso en desarrollo o en el ejecutable empaquetado. """
     if getattr(sys, 'frozen', False):
@@ -127,7 +126,6 @@ class OfertaApp(tk.LabelFrame):
         if self.current_frame == SecondFrame:
             self.show_frame(FirstFrame)
 
-
     def go_next(self):
         """
         Avanza al siguiente frame o finaliza la aplicación en el último frame.
@@ -147,7 +145,6 @@ class OfertaApp(tk.LabelFrame):
                 exit()
             except Exception as e:
                 messagebox.showerror("Error",str(e))
-
 
 class FirstFrame(ttk.Frame):
     """
@@ -439,11 +436,3 @@ class SecondFrame(ttk.Frame):
         carpeta_fichas=os.path.join(parent.carpeta_proyecto,'FICHAS_TECNICAS')
         encontradas,totales=fichas_tecnicas.main(carpeta_fichas,parent.carpeta_proyecto)
         messagebox.showinfo('Atención',f'Se encontraron {encontradas} fichas técnicas de {totales}.')
-
-
-
-
-
-
-
-

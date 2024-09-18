@@ -70,4 +70,3 @@ def main(ruta_destino,ruta_base):
             no_encontradas.append(ficha)
 
     return total_fichas-len(no_encontradas),total_fichas
-

@@ -5,7 +5,6 @@ import pythoncom  # Importa pythoncom para manejar la inicialización de COM
 import informes
 import os
 
-
 class InformesApp(tk.LabelFrame):
     def __init__(self,parent,textoLabel,controlador,directorio_de_script):
         super().__init__(parent)
@@ -82,7 +81,6 @@ class InformesApp(tk.LabelFrame):
         self.botonCancelar = ttk.Button(self.botonFrame, text="Cancelar",
                                 command=self.controlador.show_home,width=20)
         self.botonCancelar.grid(row=2, column=0, pady=(1,25),padx=10,sticky='ew',ipady=3)
-
 
     def ejecutar_automatizacion(self):
         # Obtener los valores actuales de los entries
