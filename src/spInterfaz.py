@@ -11,12 +11,12 @@ import pandas as pd
 class CrearSPWindow(tk.Toplevel):
     def __init__(self, master, datos, fsc, carpetas, carpeta_mitad,quantities,directorio,ruta_de_trabajo):
         super().__init__(master)
-
         self.title(datos['Carpeta'])
-        # self.iconbitmap(os.path.join(script_directory,"imagen.ico"))
-        imagen_ico=Image.open(os.path.join(directorio,'..','img','imagen.ico'))
+        ruta_imagen=os.path.join(directorio,'..','img','imagen.ico')
+        imagen_ico=Image.open(ruta_imagen)
         self.mi_imagen= imagen_ico.resize((48,48))
         self.mi_imagen = ImageTk.PhotoImage(self.mi_imagen)
+        self.iconbitmap(ruta_imagen)
         self.datos = datos
         self.carpetas = carpetas
         self.carpeta_mitad = carpeta_mitad
