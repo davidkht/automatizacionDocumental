@@ -8,19 +8,7 @@ import os
 import sys
 import shutil
 
-def get_resource_path():
-    """ Retorna la ruta absoluta al recurso, para uso en desarrollo o en el ejecutable empaquetado. """
-    if getattr(sys, 'frozen', False):
-        # Si el programa ha sido empaquetado, el directorio base es el que PyInstaller proporciona
-        base_path = sys._MEIPASS
-    else:
-        # Si estamos en desarrollo, utiliza la ubicación del script
-        base_path = os.path.dirname(os.path.realpath(__file__))
 
-    return base_path
-
-# Guarda la ruta del script para su uso posterior en la aplicación
-script_directory=get_resource_path()
 
 class OfertaApp(tk.LabelFrame):
     def __init__(self,parent,textoLabel,controlador,directorio_de_script):
@@ -140,9 +128,11 @@ class OfertaApp(tk.LabelFrame):
             self.show_frame(SecondFrame)
         elif self.current_frame == SecondFrame:
             try:
-                oferta.llenar_oferta(self.carpeta_proyecto,self.frame_dos.df_pvp,self.tablacomparativa[2])
+                oferta.llenar_oferta(self.carpeta_proyecto,self.frame_dos.df_pvp,self.tablacomparativa[2],self.script_directory)
                 messagebox.showinfo("Finalizado","Oferta finalizada\nRecuerde poner pre-requisitos.")
                 exit()
+            except AttributeError as e:
+                messagebox.showerror("Error","La plantilla de la Oferta tiene menos filas que el PVP.")
             except Exception as e:
                 messagebox.showerror("Error",str(e))
 

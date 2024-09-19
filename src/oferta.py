@@ -7,21 +7,8 @@ from openpyxl.utils.dataframe import dataframe_to_rows  # Función para converti
 from openpyxl.drawing.image import Image  # Importa Image para añadir imágenes a los archivos Excel
 from datetime import datetime
 
-TRM_ACTUAL_EURO=4300
-TRM_ACTUAL_USD=3800
-
-def get_resource_path():
-    """ Retorna la ruta absoluta al recurso, para uso en desarrollo o en el ejecutable empaquetado. """
-    if getattr(sys, 'frozen', False):
-        # Si el programa ha sido empaquetado, el directorio base es el que PyInstaller proporciona
-        base_path = sys._MEIPASS
-    else:
-        # Si estamos en desarrollo, utiliza la ubicación del script
-        base_path = os.path.dirname(os.path.realpath(__file__))
-
-    return base_path
-
-script_directory = get_resource_path()
+TRM_ACTUAL_EURO=4500
+TRM_ACTUAL_USD=4000
 
 def limpiar_dataframe(df):
     """
@@ -140,7 +127,7 @@ def generar_tabla_comparativa(SP, PVP, moneda_pvp):
 
     return df_comparacion.round(3)
 
-def llenar_oferta(directorio, dfpvp,moneda):
+def llenar_oferta(directorio, dfpvp,moneda,script_directory):
     """
     Llena y actualiza un archivo Excel de oferta con los datos proporcionados en el DataFrame dfpvp.
     
@@ -164,11 +151,11 @@ def llenar_oferta(directorio, dfpvp,moneda):
     hoja_destino['I17'] = f"FECHA: {fecha_actual}"
 
 
-    # Valores a buscar en la columna 'G'
+    # Valores a buscar en la columna 'F'
     valores_a_buscar = ['SUBTOTAL', 'IVA 19%', 'TOTAL']
     filas_encontradas = {}
 
-    # Itera sobre la columna 'G'
+    # Itera sobre la columna 'F'
     for fila in range(1, hoja_destino.max_row + 1):
         celda = hoja_destino[f'F{fila}']
         if celda.value in valores_a_buscar:
@@ -189,7 +176,7 @@ def llenar_oferta(directorio, dfpvp,moneda):
     }
     currency_format = currency_formats.get(moneda, '[$COP] #,##0.00')  # Default a COP si la moneda no está definida
     # Aplicar el formato al rango de celdas F21:G75
-    for row in hoja_destino['F21:G75']:
+    for row in hoja_destino[f'F21:G{filas_encontradas["SUBTOTAL"]-2}']:
         for cell in row:
             cell.number_format = currency_format
 
@@ -199,7 +186,7 @@ def llenar_oferta(directorio, dfpvp,moneda):
         hoja_destino[cell_address].number_format = currency_format
 
 
-    img = Image(os.path.join(script_directory,'..','docs','second.png'))
+    img = Image(os.path.join(script_directory,'..','img','encabezadoOferta.png'))
     hoja_destino.add_image(img, 'B1')
 
     wb_OF.save(ruta_of)
