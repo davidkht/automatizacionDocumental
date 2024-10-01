@@ -95,6 +95,8 @@ class InformesApp(tk.LabelFrame):
         
         # Crear y mostrar ventana de progreso
         self.progreso_ventana = tk.Toplevel(self)
+        ruta_imagen=os.path.join(self.script_directory,'..','img','imagen.ico')
+        self.progreso_ventana.iconbitmap(ruta_imagen)
         self.progreso_ventana.title("Procesando...")
         self.progreso_ventana.geometry("300x100")
         # Calcular la posición para centrar la ventana de progreso sobre la ventana principal

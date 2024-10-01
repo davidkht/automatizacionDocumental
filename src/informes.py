@@ -22,7 +22,7 @@ def xsl2pdf(file_location):
     worksheet = workbook.ActiveSheet
     worksheet.PageSetup.Zoom = False
     worksheet.PageSetup.FitToPagesWide = 1
-    worksheet.PageSetup.FitToPagesTall = False  # Permitir que se extienda en múltiples páginas
+    worksheet.PageSetup.FitToPagesTall = 1  # Permitir que se extienda en múltiples páginas
     ##
     workbook.ActiveSheet.ExportAsFixedFormat(0,output)
     workbook.Close()
@@ -51,7 +51,7 @@ def adjust_height(cell_range, text,sheet):
     adjusted_lines_needed = total_lines_needed * margin_factor
     
     # Ajustar la altura de la fila
-    cell_range[0][0].parent.row_dimensions[cell_range[0][0].row].height = adjusted_lines_needed * 15  # Ajustar la altura
+    cell_range[0][0].parent.row_dimensions[cell_range[0][0].row].height = adjusted_lines_needed * 14  # Ajustar la altura
 
 def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad,script_dir,directorio_de_trabajo):
 
