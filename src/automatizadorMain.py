@@ -49,6 +49,9 @@ class AutomatizadorApp(tk.Tk):
         self.mainloop()
 
     def widgets(self):
+        # Asegura que la ventana principal tenga peso en la fila para expandir los widgets
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(2, weight=1)  # Esto permitirá que el frameDeTrabajo también se ajuste
 
         self.menuFrame=ttk.Frame(self)
         self.menuFrame.grid(row=0,column=0)
@@ -60,20 +63,10 @@ class AutomatizadorApp(tk.Tk):
         self.frameDeTrabajo=ttk.Frame(self)
         self.frameDeTrabajo.grid(row=0,column=2,padx=5,pady=5)
 
-        #Grid configure
-        # self.menuFrame.grid_columnconfigure(0,weight=1)
-        # self.menuFrame.grid_rowconfigure(0,weight=1)
-        # self.menuFrame.grid_rowconfigure(1,weight=1)
-        # self.menuFrame.grid_rowconfigure(2,weight=1)
-        # self.menuFrame.grid_rowconfigure(3,weight=1)
-        # self.menuFrame.grid_rowconfigure(4,weight=1)
- 
-
-
-
-
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
+        # Asegurarte de que el menuFrame tenga un tamaño uniforme en todas las filas
+        for i in range(5):
+            self.menuFrame.grid_rowconfigure(i, weight=1, uniform="row", minsize=60)  # Asegura que todas las filas sean iguales
+        self.menuFrame.grid_columnconfigure(0, weight=1) 
 
         #Botones del menú
         self.botonHome=ttk.Button(self.menuFrame,text="Inicio", command=self.show_home)

@@ -7,7 +7,7 @@ from openpyxl.drawing.image import Image  # Importa Image para añadir imágenes
 from win32com import client
 import pdfManager as pdf
 
-PLANTILLA='plantillaInforme.xlsx'
+PLANTILLA='437V9.xlsx'
 BASE_DE_DATOS='baseDeDatosParaInforme.xlsx'
 
 def xsl2pdf(file_location):
@@ -22,8 +22,8 @@ def xsl2pdf(file_location):
     worksheet = workbook.ActiveSheet
     worksheet.PageSetup.Zoom = False
     worksheet.PageSetup.FitToPagesWide = 1
-    worksheet.PageSetup.FitToPagesTall = 1  # Permitir que se extienda en múltiples páginas
-    ##
+    worksheet.PageSetup.FitToPagesTall = 1  # False: Permitir que se extienda en múltiples páginas, 1:una pagina, 2,3,etc
+    
     workbook.ActiveSheet.ExportAsFixedFormat(0,output)
     workbook.Close()
 
@@ -51,7 +51,7 @@ def adjust_height(cell_range, text,sheet):
     adjusted_lines_needed = total_lines_needed * margin_factor
     
     # Ajustar la altura de la fila
-    cell_range[0][0].parent.row_dimensions[cell_range[0][0].row].height = adjusted_lines_needed * 14  # Ajustar la altura
+    cell_range[0][0].parent.row_dimensions[cell_range[0][0].row].height = adjusted_lines_needed * 13  # Ajustar la altura
 
 def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad,script_dir,directorio_de_trabajo):
 
@@ -64,86 +64,86 @@ def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad,script_dir,dire
     consecutivo= str(serie.iloc[0])
     nombre_equipo=str(serie.iloc[1])
 
-    celda_consecutivo=sheet["B7:E7"]
+    celda_consecutivo=sheet["B3:F3"]
     celda_consecutivo[0][0].value = "REPORTE TÉCNICO No: " + consecutivo
 
-    celda_nombre=sheet["B10:H10"]
+    celda_nombre=sheet["B6:I6"]
     celda_nombre[0][0].value = "NOMBRE DEL EQUIPO: " + nombre_equipo
 
-    celda_ubicacion=sheet["I10:L10"]
+    celda_ubicacion=sheet["J6:M6"]
     celda_ubicacion[0][0].value = "UBICACIÓN: " + str(serie.iloc[2])
 
-    celda_marca=sheet["B11:D11"]
+    celda_marca=sheet["B7:E7"]
     celda_marca[0][0].value = "MARCA: " + str(serie.iloc[3])
 
-    celda_ref=sheet["E11:H11"]
+    celda_ref=sheet["F7:I7"]
     celda_ref[0][0].value = "REF.: " + str(serie.iloc[4])
 
-    celda_serial=sheet["I11:L11"]
+    celda_serial=sheet["J7:M7"]
     celda_serial[0][0].value = "SERIAL: " + str(serie.iloc[5])
 
-    celda_cliente=sheet["F7:L7"]
+    celda_cliente=sheet["G3:M3"]
     celda_cliente[0][0].value = "CLIENTE: " + cliente
 
-    celda_orden=sheet["B8:I8"]
+    celda_orden=sheet["B4:J4"]
     celda_orden[0][0].value = "ORDEN CONTRACTUAL: " + orden
 
-    celda_contrato=sheet["J8:L8"]
+    celda_contrato=sheet["K4:M4"]
     celda_contrato[0][0].value = "CONTRATO INTERNO: " + contrato
 
-    celda_direccion=sheet["B9:H9"]
+    celda_direccion=sheet["B5:I5"]
     celda_direccion[0][0].value = "DIRECCIÓN: " + direccion
 
-    celda_ciudad=sheet["I9:L9"]
+    celda_ciudad=sheet["J5:M5"]
     celda_ciudad[0][0].value = "CIUDAD: " + ciudad
 
 
     #Parametros del informe
-    celda_encendido=sheet["B18"]
+    celda_encendido=sheet["B14"]
     celda_encendido.value = "      Encendido: " + str(serie.iloc[6])
 
-    celda_func=sheet["D18"]
+    celda_func=sheet["E14"]
     celda_func.value = "       Funcionamiento: " + str(serie.iloc[7])
 
-    celda_gar=sheet["H18"]
+    celda_gar=sheet["I14"]
     celda_gar.value = "Sellos de garantía: " + str(serie.iloc[8])
 
-    celda_gar=sheet["K18"]
+    celda_gar=sheet["L14"]
     celda_gar.value = "    Accesorios: " + str(serie.iloc[9])
 
-    celda_estado=sheet["E26:L26"]
+    celda_estado=sheet["E22:M22"]
     celda_estado[0][0].value = str(serie.iloc[10])
 
     #pie de pagina del informe
-    celda_mant=sheet["E27:L27"]
+    celda_mant=sheet["E23:M23"]
     celda_mant[0][0].value = str(serie.iloc[11])
 
-    celda_fecha=sheet["F31:H32"]
-    celda_fecha[0][0].value = str(serie.iloc[12])
+    celda_fecha=sheet["G26:I27"]
+    celda_fecha[0][0].value = "Fecha: "+ str(serie.iloc[12])
 
-    celda_h0=sheet["F33:H33"]
+    celda_h0=sheet["G28:I28"]
     celda_h0[0][0].value = "Hora de Inicio: " + str(serie.iloc[13])
 
-    celda_hf=sheet["F34:H34"]
+    celda_hf=sheet["G29:I29"]
     celda_hf[0][0].value = "Hora finalización: " + str(serie.iloc[14])
 
-    celda_nombre_cliente=sheet["I33:L33"]
+    celda_nombre_cliente=sheet["J28:M28"]
     celda_nombre_cliente[0][0].value = "Nombre: " + str(serie.iloc[15])
 
-    celda_email=sheet["I34:L34"]
+    celda_email=sheet["J29:M29"]
     celda_email[0][0].value = "Correo E: " + str(serie.iloc[16])
 
-    celda_tel=sheet["I35:L35"]
+    celda_tel=sheet["J30:M30"]
     celda_tel[0][0].value = "Número Contacto: " + str(serie.iloc[17])
 
     #Informe persé
-    celda_estado_inicial=sheet["B15:L15"]
+    celda_estado_inicial=sheet["B11:M11"]
     celda_estado_inicial[0][0].value = str(serie.iloc[18])
 
-    celda_descr=sheet["B23:L23"]
+    celda_descr=sheet["B19:M19"]
     celda_descr[0][0].value = str(serie.iloc[19])
 
-    celda_recomend=sheet["B25:L25"]
+    celda_recomend=sheet["B21:M21"]
     celda_recomend[0][0].value = str(serie.iloc[20])
 
 
@@ -153,11 +153,11 @@ def llenar_informe(serie,cliente,orden,contrato,direccion,ciudad,script_dir,dire
     adjust_height(celda_recomend, str(serie.iloc[20]),sheet)
 
     #Crea la imagen de encabezado
-    img = Image(os.path.join(script_dir, '..','img', 'encabezadoINFORME.png'))
+    img = Image(os.path.join(script_dir, '..','img', 'OFERTAV9.png'))
     sheet.add_image(img, 'B1')
     #Firma de Ingeniero
     firma = Image(os.path.join(script_dir, '..','img', 'firma.png'))
-    sheet.add_image(firma, 'C31')
+    sheet.add_image(firma, 'C27')
 
 
     #Cambia el nombre de la hoja

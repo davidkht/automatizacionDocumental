@@ -15,10 +15,10 @@ class InformesApp(tk.LabelFrame):
         # Valores por defecto
         self.default_values = {
             "CLIENTE": "Universidad Nacional Abierta y a Distancia",
-            "CONTRATO": "1782",
-            "ORDEN": "CMM-2023-000130",
-            "CIUDAD": "PASTO",
-            "DIRECCION": "Calle 14 No. 28-45 Sector Bomboná"
+            "CONTRATO": "1616",
+            "ORDEN": "CMM-2023-000075",
+            "CIUDAD": "CARTAGENA",
+            "DIRECCION": "Transversal 45 # 44A - 221"
         }
 
         #Ruta de Trabajo
